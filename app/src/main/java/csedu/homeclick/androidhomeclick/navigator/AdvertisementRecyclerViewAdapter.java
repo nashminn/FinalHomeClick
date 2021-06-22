@@ -70,6 +70,8 @@ public class AdvertisementRecyclerViewAdapter extends RecyclerView.Adapter<Adver
         this.onAdCardClickListener = adCardListener;
     }
 
+
+    //TODO: needs checking
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         private TextView areaName, fullAddress, bedroom, bathroom, gasAvailability, paymentAmount, adType;
