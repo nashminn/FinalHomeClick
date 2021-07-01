@@ -70,7 +70,7 @@ public interface AdInterface {
 
 
     //delete folder containing photos of a particular ad
-    void deletePhotoFolder(String folderName, int toDelete, OnPhotoFolderDeletedListener<Boolean> onPhotoFolderDeletedListener);
+    void deletePhotoFolder(String folderName, OnPhotoFolderDeletedListener<Boolean> onPhotoFolderDeletedListener);
 
     interface OnPhotoFolderDeletedListener<T> {
         void OnPhotoFolderDeleted(T deleted, String error);

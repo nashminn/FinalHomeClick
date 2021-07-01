@@ -454,8 +454,8 @@ public class ShowAdvertisementDetails extends AppCompatActivity implements Seria
 
                 if(phone_number == null) return;
                     Intent intent = new Intent(Intent.ACTION_DIAL);
-                    Log.i("show ad","tel:" + (String) phone_number);
-                    intent.setData(Uri.parse("tel:" + (String)phone_number));
+                    Log.i("show ad","tel:" + phone_number);
+                    intent.setData(Uri.parse("tel:" + phone_number));
                     startActivity(intent);
                 break;
 
@@ -570,26 +570,51 @@ public class ShowAdvertisementDetails extends AppCompatActivity implements Seria
         });
     }
 
+//    private void proceedToDeletePost() {
+//        final Advertisement received = (Advertisement) getIntent().getExtras().get("Ad");
+//
+//        final String adId = received.getAdvertisementID();
+//        final int totalToDelete = received.getNumberOfImages();
+//        final int[] alreadyDeleted = new int[1];
+//        adService.deletePhotoFolder(adId, totalToDelete, (deleted, error) -> {
+//            startActivity(new Intent(ShowAdvertisementDetails.this.getApplicationContext(), AdFeed.class));
+//            if(deleted) {
+//                alreadyDeleted[0]++;
+//                Log.i(TAG, "number of the photo deleted = " + error);
+//                if(alreadyDeleted[0] == totalToDelete) {
+//                    adService.deleteAd(adId, (deleted1, error1) -> {
+//                        if (deleted1) {
+//                            Log.i(TAG, "Ad " + adId + " deleted successfully");
+//                        } else {
+//                            Log.i(TAG, error1);
+//                        }
+//                    });
+//                }
+//            } else {
+//                Toast.makeText(ShowAdvertisementDetails.this.getApplicationContext(), error, Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
+
     private void proceedToDeletePost() {
+        Log.i(TAG, "in proceed to delete post");
         final Advertisement received = (Advertisement) getIntent().getExtras().get("Ad");
 
         final String adId = received.getAdvertisementID();
-        final int totalToDelete = received.getNumberOfImages();
-        final int[] alreadyDeleted = new int[1];
-        adService.deletePhotoFolder(adId, totalToDelete, (deleted, error) -> {
-            startActivity(new Intent(ShowAdvertisementDetails.this.getApplicationContext(), AdFeed.class));
+
+
+        adService.deletePhotoFolder(adId, (deleted, error) -> {
             if(deleted) {
-                alreadyDeleted[0]++;
-                Log.i(TAG, "number of the photo deleted = " + error);
-                if(alreadyDeleted[0] == totalToDelete) {
-                    adService.deleteAd(adId, (deleted1, error1) -> {
-                        if (deleted1) {
-                            Log.i(TAG, "Ad " + adId + " deleted successfully");
-                        } else {
-                            Log.i(TAG, error1);
-                        }
-                    });
-                }
+                Log.i(TAG, "in on photo folder deleted");
+                adService.deleteAd(adId, (deleted1, error1) -> {
+                    if(deleted1) {
+                        Log.i(TAG, "in ad deleted");
+                        Toast.makeText(ShowAdvertisementDetails.this.getApplicationContext(), "Ad deleted successfully.", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(ShowAdvertisementDetails.this.getApplicationContext(), AdFeed.class));
+                    } else {
+                        Toast.makeText(ShowAdvertisementDetails.this.getApplicationContext(), error1, Toast.LENGTH_SHORT).show();
+                    }
+                });
             } else {
                 Toast.makeText(ShowAdvertisementDetails.this.getApplicationContext(), error, Toast.LENGTH_SHORT).show();
             }
@@ -600,7 +625,7 @@ public class ShowAdvertisementDetails extends AppCompatActivity implements Seria
 
     public void updateUserInfo(User data) {
         Log.i(TAG, "in on user info found");
-        User data1 = (User) data;
+        User data1 = data;
         advertiser.setName(data1.getName());
         advertiser.setPhoneNumber(data1.getPhoneNumber());
         advertiser.setEmailAddress(data1.getEmailAddress());

@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.util.Log;
 
 
+
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -273,20 +274,33 @@ public class FirestoreDealer implements AdInterface, UserInterface {
     }
 
     @Override
-    public void deletePhotoFolder(final String folderName, final int toDelete, final OnPhotoFolderDeletedListener<Boolean> onPhotoFolderDeletedListener) {
+    public void deletePhotoFolder(final String folderName, final OnPhotoFolderDeletedListener<Boolean> onPhotoFolderDeletedListener) {
         FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
         StorageReference ref = firebaseStorage.getReference(UPLOADS_FOLDER).child(folderName);
         Log.i(TAG, "folderName = " + folderName);
 
+
         ref.listAll()
                 .addOnSuccessListener(listResult -> {
+                    List<StorageReference> itemList = listResult.getItems();
+                    final int toDelete = itemList.size();
                     final int[] count = new int[1];
-                    count[0] = -1;
-                    for( StorageReference item: listResult.getItems() ) {
-                        count[0]++;
+
+                    Log.i(TAG, "total to delete = " + toDelete);
+
+
+                    for( StorageReference item: itemList ) {
+
                         item.delete()
-                                .addOnSuccessListener(unused -> onPhotoFolderDeletedListener.OnPhotoFolderDeleted(true, Integer.toString( count[0] )))
-                                .addOnFailureListener(e -> onPhotoFolderDeletedListener.OnPhotoFolderDeleted(false, e.getMessage() ));
+                                .addOnSuccessListener(unused -> {
+                                    count[0]++;
+                                    Log.i(TAG, "in here " + count[0]);
+                                    if(count[0] == toDelete) {
+                                        Log.i(TAG, "total deleted");
+                                        onPhotoFolderDeletedListener.OnPhotoFolderDeleted(true, "");
+                                    }
+                                })
+                                .addOnFailureListener(e -> onPhotoFolderDeletedListener.OnPhotoFolderDeleted(false, e.getMessage()));
                     }
                 })
                 .addOnFailureListener(e -> onPhotoFolderDeletedListener.OnPhotoFolderDeleted(false, e.getMessage()));

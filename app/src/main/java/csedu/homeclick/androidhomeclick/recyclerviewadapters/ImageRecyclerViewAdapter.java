@@ -73,8 +73,8 @@ public class ImageRecyclerViewAdapter extends  RecyclerView.Adapter<ImageRecycle
             Log.i(TAG, imageURL.get(position).toString());
             RequestOptions options = new RequestOptions()
                     .fitCenter()
-                    .placeholder(R.mipmap.ic_launcher_round)
-                    .error(R.mipmap.ic_launcher_round);
+                    .placeholder(R.drawable.loading_photo)
+                    .error(R.drawable.icon_error);
             Glide.with(context).load(imageURL.get(position)).apply(options).into(holder.imageView);
         } else {
             Glide.with(context).load(imageURL.get(position)).into(holder.imageView);

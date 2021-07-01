@@ -54,8 +54,8 @@ public class AdvertisementService {
         adDealer.getThisSaleAd(onParticularAdFetchedListener, advertisementID);
     }
 
-    public void deletePhotoFolder(String folder, int toDelete, AdInterface.OnPhotoFolderDeletedListener<Boolean> onPhotoFolderDeletedListener) {
-        adDealer.deletePhotoFolder(folder, toDelete, onPhotoFolderDeletedListener);
+    public void deletePhotoFolder(String folder, AdInterface.OnPhotoFolderDeletedListener<Boolean> onPhotoFolderDeletedListener) {
+        adDealer.deletePhotoFolder(folder, onPhotoFolderDeletedListener);
     }
 
     public void deleteAd(String id, AdInterface.OnAdDeletedListener<Boolean> onAdDeletedListener) {
